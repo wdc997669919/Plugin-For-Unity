@@ -57,23 +57,23 @@ public class ScriptOne : MonoBehaviour {
         #endregion
 
         #region Material
-        //Material material = GetComponent<MeshRenderer>().material;
+        Material material = GetComponent<MeshRenderer>().material;
         //1.改变材质颜色 （前提Shader上有main color属性_Color，也就是说明修改material上的color实际上是修改的shader上面的main color）
         //如果shader上面没有main color，可通过查找shader上面的相关color属性（假设是_TintColor），通过添加其名称的方式来修改其color值
         //material.DOColor(Color.red,2);
         //material.DOColor(Color.green,"_TintColor",2);
         //2.改变材质透明度（Alpha值）
         //material.DOColor(Color.clear, 2);//设置RGBA为(0,0,0,0)
-        //material.DOFade(0,2);//直接修改Aplha值
-        //3.材质颜色渐变 
-        //material.DOGradientColor(gradient,2f);
-        //4.材质Offset改变 （注意：材质的改变是瞬间的，不能有渐变的效果，不然会产生很奇怪的感觉）
-        //material.DOOffset(Vector3.one,2);
-        //5.改变Shader属性值（改变四维向量的属性）
-        //material.DOVector(Color.clear, "_Color", 2);
-        //6.颜色混合
-        //material.DOBlendableColor(Color.green, 2);
-        //material.DOBlendableColor(Color.red, 2);
+        material.DOFade(0, 2);//直接修改Aplha值   注：这里需要透明材质的Image
+                              //3.材质颜色渐变  
+                              //material.DOGradientColor(gradient,2f);
+                              //4.材质Offset改变 （注意：材质的改变是瞬间的，不能有渐变的效果，不然会产生很奇怪的感觉）
+                              //material.DOOffset(Vector3.one,2);
+                              //5.改变Shader属性值（改变四维向量的属性）
+                              //material.DOVector(Color.clear, "_Color", 2);
+                              //6.颜色混合
+                              //material.DOBlendableColor(Color.green, 2);
+                              //material.DOBlendableColor(Color.red, 2);
         #endregion
 
         #region Camera
@@ -102,6 +102,10 @@ public class ScriptOne : MonoBehaviour {
         //text.DOFade();//改变Alpha
         //text.DOBlendableColor();//颜色混合
         //text.DOText("hello world",5f).SetEase(Ease.Linear);//匀速实现字一个个出现的效果
+        #endregion
+
+        #region 队列
+
         #endregion
 
     }
