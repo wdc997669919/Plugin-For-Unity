@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 public class ScriptOne : MonoBehaviour {
 
@@ -10,6 +11,8 @@ public class ScriptOne : MonoBehaviour {
     /// Unity自带的颜色渐变的组件
     /// </summary>
     public Gradient gradient;
+
+    public AnimationCurve _curve;
 
 	// Use this for initialization
 	void Start () {
@@ -131,8 +134,80 @@ public class ScriptOne : MonoBehaviour {
         //sequence.PrependCallback(InsertCallFunction);
         #endregion
 
+        #region 设置参数&循环设置
+        //Dotween采用链式编程，每次返回的对象都是Tweener
+        //1.SetLoops()   参数为0，表示无限循环   参数为1，2，3... 表示循环相应的次数
+        //LoopType.Yoyo 来回运动 
+        //LoopType.Restart 跑到目标位置又瞬移回来 重新开始跑
+        //LoopType.Incremental  朝着一个方向做增量运动
+        //transform.DOMove(Vector3.one, 2).SetLoops(3, LoopType.Incremental);
+        //2.SetAutoKill()   前面的动画运动完后自动销毁，如果不销毁则会将Tweener缓存起来
+        //transform.DOMove(Vector3.one, 2).SetAutoKill(true);
+        //3.From()  补间动画
+        //不添加参数true   使得object从目标点移动到起始点，反向运动
+        //添加参数true  会使得object做增量运动，但也是反向的
+        //transform.DOMove(Vector3.one, 2).From(true);
+        //4.SetDelay()  延时
+        //transform.DOMove(Vector3.one, 2).SetDelay(3f);
+        //5.SetSpeedBased()  以速度为基准的动画  
+        //当添加这个方法，DoMove后面的参数2就代表速度，而不是时间了
+        //transform.DOMove(Vector3.one, 2).SetSpeedBased();
+        //6.SetId()  设置ID  调用缓存的动画
+        //transform.DOMove(Vector3.one, 2).SetId("ID");
+        //DOTween.Play("ID");
+        //7.SetRecyclable()   设置是否可以回收
+        //transform.DOMove(Vector3.one, 2).SetRecyclable(true);
+        //8.SetRelative()  增量运动
+        //transform.DOMove(Vector3.one, 2).SetRelative(true);
+        //9.设置帧函数类型
+        //UpdateType.Manual 依赖于 ManualUpdate()方法
+        //transform.DOMove(Vector3.one, 2).SetUpdate(UpdateType.Manual,true);
+        //DOTween.ManualUpdate();
+        #endregion
+
+        #region 运动曲线
+        //1.Ease 枚举类型  各种速度变换的曲线
+        //针对某些枚举值，可能有三个参数(运动曲线，振幅<运动次数>，力的大小)，用来设置实现来回运动的参数 （官网推荐用来进行图片颜色的闪烁效果） 
+        //力的大小 大于0  作用的力越来越小    等于0   作用力不变     小于0   作用的力越来越大
+        //transform.DOMove(Vector3.one,2).SetEase(Ease.Linear);
+        //transform.DOMove(Vector3.one, 2).SetEase(Ease.Flash,3,0);
+        //2.AnimationCurve设置曲线  感觉这个很方便呀   （横轴是时间，纵轴是距离倍数）
+        //transform.DOMove(Vector3.one, 2).SetEase(_curve);
+        //3.自定义函数设置运动曲线
+        //transform.DOMove(Vector3.one, 2).SetEase(EaseFun);
+        #endregion
+
+        #region 回调函数
+        //1.OnComplete()   运动完成后执行
+        transform.DOMove(Vector3.one, 2).OnComplete(()=> { Debug.Log("hello"); });
+        //2.常见的方法
+        //transform.DOMove(Vector3.one, 2).OnKill();
+        //transform.DOMove(Vector3.one, 2).OnPlay();
+        //transform.DOMove(Vector3.one, 2).OnPause();
+        //transform.DOMove(Vector3.one, 2).OnStart();
+        //transform.DOMove(Vector3.one, 2).OnStepComplete();//循环时调用
+        //transform.DOMove(Vector3.one, 2).OnUpdate();
+        //3.一般在动画重新播放的时候才会去使用OnRewind()
+        //transform.DOMove(Vector3.one, 2).OnRewind();
+        #endregion
     }
 
+    /// <summary>
+    /// 自定义运动曲线函数
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="duration"></param>
+    /// <param name="overshootOrAmplitude"></param>
+    /// <param name="period"></param>
+    /// <returns>返回值必须是0-1之间才能正确到达目的地</returns>
+    private float EaseFun(float time, float duration, float overshootOrAmplitude, float period)
+    {
+        return time / duration *1;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public void InsertCallFunction()
     {
         Debug.Log("InsertCallFunction");
